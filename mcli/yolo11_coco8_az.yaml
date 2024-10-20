@@ -12,22 +12,37 @@ integrations:
     pip_install: .
     ssh_clone: False
   - integration_type: git_repo
-    git_repo: /cylee-db/mosaic-ultralytics.git
+    git_repo: /cylee-db/mosaic-ultralytics
     path: /workspace/mosaic-ultralytics
-    pip_install: .
     ssh_clone: False
 command: >-
   cd /workspace/mosaic-ultralytics
 
+  echo Checking contents of mosaic-ultralytics repo in directory:
+  pwd
+  echo Listing files in current directory
+
+  ls
+
+  echo #### Download images from Azure storage ####
+
   # Copy image files from ADLS to image directory used in Ultralytics data config file
-    ./azcopy/azcopy copy $sas-url ../ultralytics/ultralytics/datasets/coco8-az –recursive
+    ./azcopy/azcopy copy "<FILL_IN_SAS_URL>" ../ultralytics/ultralytics/datasets/coco8az --recursive
   
   cd /workspace/ultralytics/ultralytics
 
-  ls ./datasets/coco8-az
+  echo Checking contents of mosaic-ultralytics repo in directory:
+  pwd
+  echo Listing files in current directory:
 
-  # Load a COCO-pretrained YOLOv8n model and train it on the COCO8 example dataset for 100 epochs
-  #  yolo train model=yolov8n.pt data=coco8.yaml epochs=100 imgsz=640 device=0,1,2,3 batch=4
+  ls
+
+  echo Checking copied image folder:
+  
+  ls ./datasets/coco8az
+
+  # Load a COCO-pretrained YOLOv8n model and train it on the downloaded COCO8 dataset for 100 epochs
+    yolo train model=yolov8n.pt data=../../mosaic-ultralytics/ultralytics/cfg/datasets/coco8az.yaml epochs=100 imgsz=640 device=0,1,2,3 batch=4
 
   # Load a COCO-pretrained YOLOv8n model and run inference on the 'bus.jpg' image
   #  yolo predict model=yolov8n.pt source=https://ultralytics.com/images/bus.jpg
