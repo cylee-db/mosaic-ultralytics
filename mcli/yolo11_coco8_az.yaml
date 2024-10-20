@@ -19,7 +19,9 @@ command: >-
   cd /workspace/mosaic-ultralytics
 
   echo Checking contents of mosaic-ultralytics repo in directory:
+
   pwd
+  
   echo Listing files in current directory
 
   ls
@@ -31,8 +33,10 @@ command: >-
   
   cd /workspace/ultralytics/ultralytics
 
-  echo Checking contents of mosaic-ultralytics repo in directory:
+  echo Checking contents of ultralytics repo in directory:
+
   pwd
+
   echo Listing files in current directory:
 
   ls
@@ -41,8 +45,17 @@ command: >-
   
   ls ./datasets/coco8az
 
+  ls ./datasets/coco8az/coco8
+
+  echo --- Copying data config file
+
+  # Copy dataset config file to ultralytics location
+  cp ../../mosaic-ultralytics/ultralytics/cfg/datasets/coco8az.yaml ./cfg/datasets/coco8az.yaml
+
+  ls ./cfg/datasets
+
   # Load a COCO-pretrained YOLOv8n model and train it on the downloaded COCO8 dataset for 100 epochs
-    yolo train model=yolov8n.pt data=../../mosaic-ultralytics/ultralytics/cfg/datasets/coco8az.yaml epochs=100 imgsz=640 device=0,1,2,3 batch=4
+    yolo train model=yolov8n.pt data=coco8az.yaml epochs=100 imgsz=640 device=0,1,2,3 batch=4
 
   # Load a COCO-pretrained YOLOv8n model and run inference on the 'bus.jpg' image
   #  yolo predict model=yolov8n.pt source=https://ultralytics.com/images/bus.jpg
