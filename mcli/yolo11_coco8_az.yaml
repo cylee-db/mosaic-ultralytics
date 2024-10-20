@@ -16,6 +16,19 @@ integrations:
     path: /workspace/mosaic-ultralytics
     ssh_clone: False
 command: >-
+  echo -- Installing azcopy
+
+  wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+
+  dpkg -i packages-microsoft-prod.deb
+
+  rm packages-microsoft-prod.deb
+
+  apt-get update
+
+  apt-get install azcopy
+
+
   cd /workspace/mosaic-ultralytics
 
   echo --- Checking contents of mosaic-ultralytics repo in directory:
@@ -33,7 +46,8 @@ command: >-
   echo --- Download images from Azure storage ####
 
   # Copy image files from ADLS to image directory used in Ultralytics data config file
-    ./azcopy/azcopy copy "<FILL_IN_SAS_URL>" ../ultralytics/ultralytics/datasets/coco8az --recursive
+    azcopy copy "<FILL_IN_SAS_URL>" ../ultralytics/ultralytics/datasets/coco8az --recursive
+
   
   cd /workspace/ultralytics/ultralytics
 
