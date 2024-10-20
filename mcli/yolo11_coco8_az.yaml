@@ -26,6 +26,10 @@ command: >-
 
   ls
 
+  echo Listing dataset config files
+
+  ls ./ultralytics/cfg/datasets
+
   echo #### Download images from Azure storage ####
 
   # Copy image files from ADLS to image directory used in Ultralytics data config file
@@ -50,7 +54,7 @@ command: >-
   echo --- Copying data config file
 
   # Copy dataset config file to ultralytics location
-  cp ../../mosaic-ultralytics/ultralytics/cfg/datasets/coco8az.yaml ./cfg/datasets/coco8az.yaml
+    cp ../../mosaic-ultralytics/ultralytics/cfg/datasets/coco8az.yaml ./cfg/datasets/coco8az.yaml
 
   ls ./cfg/datasets
 
