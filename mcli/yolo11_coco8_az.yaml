@@ -1,6 +1,6 @@
 # YOLOv11 training and inference config to test on coco8 images
 
-name: yolov11-single-node
+name: yolov11-single-node-adls
 image: mosaicml/pytorch:1.13.1_cu117-python3.10-ubuntu20.04
 compute:
   gpus: 8
@@ -18,48 +18,43 @@ integrations:
 command: >-
   cd /workspace/mosaic-ultralytics
 
-  echo Checking contents of mosaic-ultralytics repo in directory:
+  echo --- Checking contents of mosaic-ultralytics repo in directory:
 
   pwd
   
-  echo Listing files in current directory
+  echo --- Listing files in current directory
 
   ls
 
-  echo Listing dataset config files
+  echo --- Listing dataset config files
 
   ls ./ultralytics/cfg/datasets
 
-  echo #### Download images from Azure storage ####
+  echo --- Download images from Azure storage ####
 
   # Copy image files from ADLS to image directory used in Ultralytics data config file
     ./azcopy/azcopy copy "<FILL_IN_SAS_URL>" ../ultralytics/ultralytics/datasets/coco8az --recursive
   
   cd /workspace/ultralytics/ultralytics
 
-  echo Checking contents of ultralytics repo in directory:
+  echo --- Checking contents of ultralytics repo in directory:
 
   pwd
 
-  echo Listing files in current directory:
+  echo --- Listing files in current directory:
 
   ls
 
-  echo Checking copied image folder:
+  echo --- Checking copied images:
   
-  ls ./datasets/coco8az
+  find ./datasets/coco8az
 
-  ls ./datasets/coco8az/coco8
-
-  echo --- Copying data config file
-
-  # Copy dataset config file to ultralytics location
-    cp ../../mosaic-ultralytics/ultralytics/cfg/datasets/coco8az.yaml ./cfg/datasets/coco8az.yaml
-
-  ls ./cfg/datasets
+  echo --- Start training
 
   # Load a COCO-pretrained YOLOv8n model and train it on the downloaded COCO8 dataset for 100 epochs
-    yolo train model=yolov8n.pt data=coco8az.yaml epochs=100 imgsz=640 device=0,1,2,3 batch=4
+    yolo train model=yolov8n.pt data=../../mosaic-ultralytics/ultralytics/cfg/datasets/coco8az.yaml epochs=100 imgsz=640 device=0,1,2,3 batch=4
+
+  echo --- Run inference
 
   # Load a COCO-pretrained YOLOv8n model and run inference on the 'bus.jpg' image
-  #  yolo predict model=yolov8n.pt source=https://ultralytics.com/images/bus.jpg
+    yolo predict model=yolov8n.pt source=https://ultralytics.com/images/bus.jpg
