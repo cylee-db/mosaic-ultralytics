@@ -1,0 +1,33 @@
+# YOLOv11 training and inference config to test on coco8 images
+
+name: yolov11-single-node
+image: mosaicml/pytorch:1.13.1_cu117-python3.10-ubuntu20.04
+compute:
+  gpus: 8
+  cluster: r8z11
+integrations:
+  - integration_type: git_repo
+    git_repo: ultralytics/ultralytics
+    path: /workspace/ultralytics
+    pip_install: .
+    ssh_clone: False
+  - integration_type: git_repo
+    git_repo: /cylee-db/mosaic-ultralytics.git
+    path: /workspace/mosaic-ultralytics
+    pip_install: .
+    ssh_clone: False
+command: >-
+  cd /workspace/mosaic-ultralytics
+
+  # Copy image files from ADLS to image directory used in Ultralytics data config file
+    ./azcopy/azcopy copy $sas-url ../ultralytics/ultralytics/datasets/coco8-az –recursive
+  
+  cd /workspace/ultralytics/ultralytics
+
+  ls ./datasets/coco8-az
+
+  # Load a COCO-pretrained YOLOv8n model and train it on the COCO8 example dataset for 100 epochs
+  #  yolo train model=yolov8n.pt data=coco8.yaml epochs=100 imgsz=640 device=0,1,2,3 batch=4
+
+  # Load a COCO-pretrained YOLOv8n model and run inference on the 'bus.jpg' image
+  #  yolo predict model=yolov8n.pt source=https://ultralytics.com/images/bus.jpg
